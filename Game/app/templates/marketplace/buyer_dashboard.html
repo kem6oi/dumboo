@@ -1,0 +1,39 @@
+{# app/templates/marketplace/buyer_dashboard.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Buyer Dashboard</h1>
+
+    <h2>Your Purchases</h2>
+    {% if user_purchases %}
+        <div class="purchase-history">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Seller</th>
+                        <th>Quantity</th>
+                        <th>Purchase Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchase in user_purchases %}
+                        <tr>
+                            <td><a href="{{ url_for('marketplace.product_detail', product_id=purchase.product.id) }}">{{ purchase.product.name }}</a></td>
+                             <td>{{ purchase.product.seller.username }}</td>
+                            <td>{{ purchase.quantity }}</td>
+                            <td>{{ purchase.purchase_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>{{ purchase.status | capitalize }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>You have not made any purchases yet.</p>
+    {% endif %}
+
+    <p><a href="{{ url_for('marketplace.product_list') }}" class="btn btn-primary">Browse Marketplace Products</a></p>
+
+{% endblock %}

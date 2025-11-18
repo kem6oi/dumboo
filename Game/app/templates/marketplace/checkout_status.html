@@ -1,0 +1,106 @@
+{# app/templates/marketplace/checkout_status.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>M-Pesa Transaction Status</h1>
+
+    {% if transaction %}
+        <p><strong>Transaction ID:</strong> {{ transaction.id }}</p>
+        <p><strong>Amount:</strong> ${{ "%.2f" | format(transaction.amount) }}</p>
+        <p><strong>Status:</strong> <span id="transaction-status">{{ transaction.status | capitalize }}</span></p> {# Add ID for potential JS #}
+        <p><strong>Initiated At:</strong> {{ transaction.transaction_time.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+
+        {# Display M-Pesa specific IDs if available #}
+        {% if transaction.mpesa_checkout_request_id %}
+            <p><small>M-Pesa Checkout Request ID: {{ transaction.mpesa_checkout_request_id }}</small></p>
+        {% endif %}
+         {% if transaction.mpesa_receipt_number %}
+            <p><small>M-Pesa Receipt Number: {{ transaction.mpesa_receipt_number }}</small></p>
+        {% endif %}
+
+
+        {% if transaction.status == 'initiated' %}
+            <div class="alert alert-info">
+                Your M-Pesa payment has been initiated. Please check your phone for the STK Push prompt and complete the payment.
+            </div>
+            {# Show the verification form if status is 'initiated' #}
+            {% if verify_form %}
+                 <h3>Verify Payment with Confirmation Code</h3>
+                 <p>After completing the STK push on your phone, you will receive an SMS from M-Pesa containing a confirmation code (e.g., <code>LKJ5XXXXXX</code>). Enter it below to verify your payment.</p>
+                 <form method="POST" action=""> {# Action posts back to this route #}
+                     {{ verify_form.hidden_tag() }}
+                     <div class="form-group">
+                         {{ verify_form.mpesa_code.label }}
+                         {{ verify_form.mpesa_code(class_='form-control' + (' is-invalid' if verify_form.mpesa_code.errors else '')) }}
+                         {% for error in verify_form.mpesa_code.errors %}
+                             <span class="invalid-feedback">{{ error }}</span>
+                         {% endfor %}
+                     </div>
+                     <div class="form-group">
+                         {{ verify_form.submit(class_='btn btn-success') }}
+                     </div>
+                 </form>
+            {% endif %}
+
+        {% elif transaction.status == 'pending' %}
+             <div class="alert alert-warning">
+                Your M-Pesa payment is still pending confirmation.
+             </div>
+             {# Still show verification form #}
+             {% if verify_form %}
+                 <h3>Verify Payment with Confirmation Code</h3>
+                 <p>Enter the M-Pesa confirmation code from the SMS.</p>
+                  <form method="POST" action=""> {# Action posts back to this route #}
+                     {{ verify_form.hidden_tag() }}
+                     <div class="form-group">
+                         {{ verify_form.mpesa_code.label }}
+                         {{ verify_form.mpesa_code(class_='form-control' + (' is-invalid' if verify_form.mpesa_code.errors else '')) }}
+                         {% for error in verify_form.mpesa_code.errors %}
+                             <span class="invalid-feedback">{{ error }}</span>
+                         {% endfor %}
+                     </div>
+                     <div class="form-group">
+                         {{ verify_form.submit(class_='btn btn-success') }}
+                     </div>
+                 </form>
+            {% endif %}
+
+
+        {% elif transaction.status == 'completed' %}
+             <div class="alert alert-success">
+                 Payment successful! Your purchase has been completed.
+             </div>
+             <p>M-Pesa Receipt Number: <strong>{{ transaction.mpesa_receipt_number }}</strong></p>
+             <p><a href="{{ url_for('marketplace.buyer_dashboard') }}" class="btn btn-primary">Go to Buyer Dashboard</a></p>
+
+        {% elif transaction.status == 'failed' %}
+             <div class="alert alert-danger">
+                 Payment failed. Please try again or contact support.
+             </div>
+             {# Optional: Display error message from M-Pesa payload if available #}
+             {# {% if transaction.mpesa_payload %}
+                  <p><small>Error details: {{ transaction.mpesa_payload }}</small></p>
+             {% endif %} #}
+              <p><a href="{{ url_for('marketplace.view_cart') }}" class="btn btn-secondary">Return to Cart</a></p>
+
+        {% elif transaction.status == 'cancelled' %}
+             <div class="alert alert-warning">
+                 Payment was cancelled.
+             </div>
+              <p><a href="{{ url_for('marketplace.view_cart') }}" class="btn btn-secondary">Return to Cart</a></p>
+        {% else %}
+             <div class="alert alert-secondary">
+                 Transaction status: {{ transaction.status }}.
+             </div>
+        {% endif %}
+
+    {% else %}
+        <div class="alert alert-danger">Transaction not found.</div>
+    {% endif %}
+
+     <p><a href="{{ url_for('marketplace.buyer_dashboard') }}" class="btn btn-secondary" style="margin-top: 20px;">Back to Buyer Dashboard</a></p>
+
+     {# Optional: Add JS here to periodically check status via AJAX #}
+     {# This is advanced and requires a separate backend route that returns JSON status #}
+
+{% endblock %}

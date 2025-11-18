@@ -1,0 +1,48 @@
+{# app/templates/auth/register.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Register</h1>
+    <form method="POST" action="" class="form-validation">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.username.label }}
+            {{ form.username(class_='form-control' + (' is-invalid' if form.username.errors else '')) }}
+            {% for error in form.username.errors %}
+                <span class="invalid-feedback">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.email.label }}
+            {{ form.email(class_='form-control' + (' is-invalid' if form.email.errors else '')) }}
+            {% for error in form.email.errors %}
+                <span class="invalid-feedback">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.password.label }}
+            {{ form.password(class_='form-control' + (' is-invalid' if form.password.errors else '')) }}
+            {% for error in form.password.errors %}
+                <span class="invalid-feedback">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.confirm_password.label }}
+            {{ form.confirm_password(class_='form-control' + (' is-invalid' if form.confirm_password.errors else '')) }}
+            {% for error in form.confirm_password.errors %}
+                <span class="invalid-feedback">{{ error }}</span>
+            {% endfor %}
+        </div>
+         <div class="form-group">
+            {{ form.role.label }}
+            {{ form.role(class_='form-control' + (' is-invalid' if form.role.errors else '')) }}
+            {% for error in form.role.errors %}
+                <span class="invalid-feedback">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.submit() }}
+        </div>
+    </form>
+    <p>Already have an account? <a href="{{ url_for('auth.login') }}">Log In</a></p>
+{% endblock %}

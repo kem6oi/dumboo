@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="challenge-form-container">
+    <h1>Create New Challenge</h1>
+    
+    {# JavaScript to toggle visibility of crypto fields #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorySelect = document.getElementById('category');
+            const encryptionTypeGroup = document.querySelector('.form-group:has(#encryption_type)');
+            const challengeDataGroup = document.querySelector('.form-group:has(#challenge_data)');
+            const configJsonGroup = document.querySelector('.form-group:has(#config_json)');
+
+            function toggleCryptoFields() {
+                const isCrypto = categorySelect.value === 'Cryptography';
+                
+                if (encryptionTypeGroup) {
+                    encryptionTypeGroup.style.display = isCrypto ? 'block' : 'none';
+                }
+                if (challengeDataGroup) {
+                    challengeDataGroup.style.display = isCrypto ? 'block' : 'none';
+                }
+                if (configJsonGroup) {
+                    configJsonGroup.style.display = isCrypto ? 'block' : 'none';
+                }
+
+                // Optional: clear fields when hidden
+                if (!isCrypto) {
+                    const encryptionType = document.getElementById('encryption_type');
+                    const challengeData = document.getElementById('challenge_data');
+                    const configJson = document.getElementById('config_json');
+                    
+                    if (encryptionType) encryptionType.value = '';
+                    if (challengeData) challengeData.value = '';
+                    if (configJson) configJson.value = '';
+                }
+            }
+
+            // Initial state
+            toggleCryptoFields();
+
+            // Add event listener
+            categorySelect.addEventListener('change', toggleCryptoFields);
+        });
+    </script>
+
+    <form method="POST" action="" class="form-validation challenge-form-layout">
+        {{ form.hidden_tag() }}
+        
+        {# Basic Information Section #}
+        <div class="challenge-form-section">
+            <h3>Basic Information</h3>
+            
+            <div class="form-group">
+                {{ form.title.label }}
+                {{ form.title(class_='form-control' + (' is-invalid' if form.title.errors else '')) }}
+                {% for error in form.title.errors %}
+                    <span class="invalid-feedback">{{ error }}</span>
+                {% endfor %}
+            </div>
+            
+            <div class="form-group">
+                {{ form.description.label }}
+                {{ form.description(class_='form-control' + (' is-invalid' if form.description.errors else '')) }}
+                {% for error in form.description.errors %}
+                    <span class="invalid-feedback">{{ error }}</span>
+                {% endfor %}
+            </div>
+            
+            <div class="form-group">
+                {{ form.category.label }}
+                {{ form.category(class_='form-control' + (' is-invalid' if form.category.errors else '')) }}
+                {% for error in form.category.errors %}
+                    <span class="invalid-feedback">{{ error }}</span>
+                {% endfor %}
+            </div>
+            
+            <div class="form-group">
+                {{ form.difficulty.label }}
+                {{ form.difficulty(class_='form-control' + (' is-invalid' if form.difficulty.errors else '')) }}
+                {% for error in form.difficulty.errors %}
+                    <span class="invalid-feedback">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        {# Solution Section #}
+        <div class="challenge-form-section">
+            <h3>Solution</h3>
+            
+            <div class="form-group">
+                {{ form.flag.label }}
+                {{ form.flag(class_='form-control' + (' is-invalid' if form.flag.errors else '')) }}
+                {% for error in form.flag.errors %}
+                    <span class="invalid-feedback">{{ error }}</span>
+                {% endfor %}
+                <small>The correct flag that users must submit to solve this challenge.</small>
+            </div>
+        </div>
+
+        {# Challenge Data Section (Crypto-specific fields) #}
+        <div class="challenge-form-section">
+            <h3>Challenge Data</h3>
+            
+            <div class="form-group">
+                {{ form.challenge_data.label }}
+                {{ form.challenge_data(class_='form-control' + (' is-invalid' if form.challenge_data.errors else '')) }}
+                {% for error in form.challenge_data.errors %}
+                    <span class="invalid-feedback">{{ error }}</span>
+                {% endfor %}
+                <small>Use this for crypto ciphertext, a URL, base64 data, etc. (Optional)</small>
+            </div>
+            
+            <div class="form-group">
+                {{ form.encryption_type.label }}
+                {{ form.encryption_type(class_='form-control' + (' is-invalid' if form.encryption_type.errors else '')) }}
+                {% for error in form.encryption_type.errors %}
+                    <span class="invalid-feedback">{{ error }}</span>
+                {% endfor %}
+                <small>Specify the encryption algorithm used (e.g., AES, RSA, Caesar).</small>
+            </div>
+            
+            <div class="form-group">
+                {{ form.config_json.label }}
+                {{ form.config_json(class_='form-control' + (' is-invalid' if form.config_json.errors else '')) }}
+                {% for error in form.config_json.errors %}
+                    <span class="invalid-feedback">{{ error }}</span>
+                {% endfor %}
+                <small>Use this for crypto key/IV (e.g., JSON like {"key": "...", "iv": "..."}), ports, usernames, etc. (Optional)</small>
+            </div>
+        </div>
+
+        {# Form Actions #}
+        <div class="challenge-form-actions">
+            <a href="{{ url_for('admin.manage_challenges') }}" class="btn btn-secondary">Cancel</a>
+            {{ form.submit(class_='btn btn-primary') }}
+        </div>
+    </form>
+</div>
+{% endblock %}

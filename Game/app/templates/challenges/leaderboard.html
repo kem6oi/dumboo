@@ -1,0 +1,57 @@
+{# app/templates/challenges/leaderboard.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Leaderboard</h1>
+
+    <h2>Top Solvers (Total Challenges)</h2>
+    {% if top_solvers %}
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Username</th>
+                    <th>Challenges Solved</th>
+                </tr>
+            </thead>
+            <tbody>
+                {# Use loop.index for the rank #}
+                {% for solver in top_solvers %}
+                    <tr>
+                        <td>{{ loop.index }}</td> {# Use loop.index here #}
+                        <td>{{ solver.username }}</td>
+                        <td>{{ solver.solved_count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No challenges have been solved yet.</p>
+    {% endif %}
+
+    <h2>Top Hard Challenge Solvers</h2>
+    {% if top_hard_solvers %}
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Username</th>
+                    <th>Hard Challenges Solved</th>
+                </tr>
+            </thead>
+            <tbody>
+                {# Apply the same fix here #}
+                {% for solver in top_hard_solvers %}
+                    <tr>
+                        <td>{{ loop.index }}</td> {# Use loop.index here #}
+                        <td>{{ solver.username }}</td>
+                        <td>{{ solver.hard_count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No hard challenges have been solved yet.</p>
+    {% endif %}
+
+{% endblock %}

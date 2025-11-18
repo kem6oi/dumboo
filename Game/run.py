@@ -12,10 +12,10 @@ app = create_app()
 with app.app_context():
     from app import db # Import db locally within context
     db_path = app.config.get('SQLALCHEMY_DATABASE_URI')
-    if db_path.startswith('sqlite:///'):
+    if db_path and db_path.startswith('sqlite:///'):
          db_file = db_path.replace('sqlite:///', '', 1)
-         # Check if the database file exists relative to app.root_path
-         full_db_path = os.path.join(app.root_path, db_file)
+         # Check if the database file exists - use instance folder for instance path
+         full_db_path = os.path.join(app.instance_path, db_file) if not os.path.isabs(db_file) else db_file
          if not os.path.exists(full_db_path):
              print(f"Database file '{db_file}' not found. Creating tables...")
              db.create_all()
@@ -26,7 +26,9 @@ with app.app_context():
          # Optionally call db.create_all() here unconditionally for other DBs,
          # but be aware it might fail if tables partially exist.
          # db.create_all()
-# --- End of added block ---ocessor
+# --- End of added block ---
+
+@app.shell_context_processor
 def make_shell_context():
     # Import db and models locally within the shell context function
     # This avoids top-level imports that could contribute to cycles

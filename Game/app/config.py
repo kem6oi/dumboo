@@ -36,20 +36,20 @@ class Config:
     # Maximum content length for file uploads (5MB)
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024
 
-   # ======================== M-Pesa Configuration (Placeholders) ========================
-# !!! WARNING: Replace with actual secure environment variables in production !!!
-MPESA_CONSUMER_KEY = os.environ.get('MPESA_CONSUMER_KEY', 'YOUR_MPESA_CONSUMER_KEY')
-MPESA_CONSUMER_SECRET = os.environ.get('MPESA_CONSUMER_SECRET', 'YOUR_MPESA_CONSUMER_SECRET')
-MPESA_SHORTCODE = os.environ.get('MPESA_SHORTCODE', '174379') # Paybill/Till Number - Use test sandbox ones initially
-MPESA_PASSKEY = os.environ.get('MPESA_PASSKEY', 'bfb279f914b717b9719790ddee50b7a7e63b0997dae17a78a9f8810fd6f1a66c') # LNM Online Passkey - Use test sandbox one
-MPESA_CALLBACK_URL = os.environ.get('MPESA_CALLBACK_URL', 'YOUR_PUBLIC_URL/marketplace/mpesa_callback') # MUST be publicly accessible URL
-MPESA_API_URL = os.environ.get('MPESA_API_URL', 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest') # Sandbox URL
-# MPESA_API_AUTH_URL = os.environ.get('MPESA_API_AUTH_URL', 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials') # Sandbox Auth URL
-# MPESA_TRANSACTION_TYPE = os.environ.get('MPESA_TRANSACTION_TYPE', 'CustomerBuyGoodsOnline') # Or CustomerPayBillOnline
+    # ======================== M-Pesa Configuration (Placeholders) ========================
+    # !!! WARNING: Replace with actual secure environment variables in production !!!
+    MPESA_CONSUMER_KEY = os.environ.get('MPESA_CONSUMER_KEY', 'YOUR_MPESA_CONSUMER_KEY')
+    MPESA_CONSUMER_SECRET = os.environ.get('MPESA_CONSUMER_SECRET', 'YOUR_MPESA_CONSUMER_SECRET')
+    MPESA_SHORTCODE = os.environ.get('MPESA_SHORTCODE', '174379') # Paybill/Till Number - Use test sandbox ones initially
+    MPESA_PASSKEY = os.environ.get('MPESA_PASSKEY', 'bfb279f914b717b9719790ddee50b7a7e63b0997dae17a78a9f8810fd6f1a66c') # LNM Online Passkey - Use test sandbox one
+    MPESA_CALLBACK_URL = os.environ.get('MPESA_CALLBACK_URL', 'YOUR_PUBLIC_URL/marketplace/mpesa_callback') # MUST be publicly accessible URL
+    MPESA_API_URL = os.environ.get('MPESA_API_URL', 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest') # Sandbox URL
+    # MPESA_API_AUTH_URL = os.environ.get('MPESA_API_AUTH_URL', 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials') # Sandbox Auth URL
+    # MPESA_TRANSACTION_TYPE = os.environ.get('MPESA_TRANSACTION_TYPE', 'CustomerBuyGoodsOnline') # Or CustomerPayBillOnline
 
-# Minimum amount for STK Push is typically 1 KES
-MPESA_MIN_AMOUNT = 1.00
+    # Minimum amount for STK Push is typically 1 KES
+    MPESA_MIN_AMOUNT = 1.00
 
-# Add a simulated expected M-Pesa confirmation code for verification (for demonstration)
-# In a real system, you'd verify against M-Pesa's API or await a callback.
-SIMULATED_MPESA_CONFIRMATION_CODE = os.environ.get('SIMULATED_MPESA_CONFIRMATION_CODE', "ABC123XYZ") 
+    # Add a simulated expected M-Pesa confirmation code for verification (for demonstration)
+    # In a real system, you'd verify against M-Pesa's API or await a callback.
+    SIMULATED_MPESA_CONFIRMATION_CODE = os.environ.get('SIMULATED_MPESA_CONFIRMATION_CODE', "ABC123XYZ") 

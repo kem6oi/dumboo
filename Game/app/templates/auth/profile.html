@@ -1,0 +1,89 @@
+{# app/templates/auth/profile.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Profile - {{ current_user.username }}</h1>
+
+    <div class="profile-info">
+        <p><strong>Username:</strong> {{ current_user.username }}</p>
+        <p><strong>Email:</strong> {{ current_user.email }}</p>
+        {# Display the stored role string #}
+        <p><strong>Stored Role:</strong> {{ current_user.role | capitalize }}</p>
+        <p><strong>Member Since:</strong> {{ current_user.date_registered.strftime('%Y-%m-%d') }}</p>
+        <p><strong>Account Status:</strong> {{ "Active" if current_user.is_active else "Inactive" }}</p>
+        {# Optional: Add a line indicating *actual* access level if desired #}
+        {# <p><strong>Current Access:</strong>
+            {% if current_user.role == 'admin' %} Admin
+            {% elif hard_count >= hard_required %} Seller
+            {% elif easy_count >= easy_required %} Buyer
+            {% else %} Enthusiast
+            {% endif %}
+        </p> #}
+    </div>
+
+    <div class="profile-stats">
+        <h3>Challenge Statistics</h3>
+        <ul>
+            {# Display counts and requirements passed from the route #}
+            <li><strong>Easy Solved:</strong> {{ easy_count }} (Required for Buyer Access: {{ easy_required }})</li>
+            <li><strong>Medium Solved:</strong> {{ medium_count }}</li>
+            <li><strong>Hard Solved:</strong> {{ hard_count }} (Required for Seller Access: {{ hard_required }})</li>
+        </ul>
+        <p><a href="{{ url_for('challenges.solved') }}">View your solved challenges</a></p>
+    </div>
+
+    <div class="profile-actions">
+        <h3>Role Upgrades</h3>
+        {# Use the flags passed from the route to control button visibility #}
+
+        {# Show Buyer upgrade option if eligible and not already a higher role #}
+        {% if show_upgrade_buyer %}
+             <p>You qualify for <strong>Buyer</strong> status! This grants access to purchase items in the marketplace.</p>
+             <a href="{{ url_for('auth.upgrade_role', role='buyer') }}" class="btn btn-success">Upgrade to Buyer Status</a>
+        {% elif current_user.role == 'enthusiast' %} {# Only show "needs more" message if still base role #}
+             <p>Solve {{ easy_required - easy_count }} more Easy challenges to qualify for Buyer status and marketplace buying access.</p>
+        {% endif %}
+
+        <div style="margin-top: 15px;"></div> {# Small separator #}
+
+        {# Show Seller upgrade option if eligible and not already Admin role #}
+        {# Note: Buyers can also upgrade to Seller if they meet hard challenge reqs #}
+        {% if show_upgrade_seller %}
+             <p>You qualify for <strong>Seller</strong> status! This grants access to sell items in the marketplace.</p>
+             <a href="{{ url_for('auth.upgrade_role', role='seller') }}" class="btn btn-success">Upgrade to Seller Status</a>
+         {% elif current_user.role not in ['seller', 'admin'] %} {# Only show "needs more" message if not already Seller/Admin #}
+             <p>Solve {{ hard_required - hard_count }} more Hard challenges to qualify for Seller status and marketplace selling access.</p>
+         {% endif %}
+
+
+        {# Existing links for marketplace dashboards - Access is now controlled by decorators #}
+         <h3>Marketplace Access</h3>
+         {# These links will work *only* if the user meets the challenge requirements (or is admin) #}
+         {# Add conditional display for clarity, although decorators handle actual access #}
+
+         {% set easy_req_met = easy_count >= easy_required %}
+         {% set hard_req_met = hard_count >= hard_required %}
+
+         {% if current_user.role == 'admin' or hard_req_met %}
+            {# Admin or meets Seller reqs #}
+            <p><a href="{{ url_for('marketplace.seller_dashboard') }}" class="btn btn-primary">Go to Seller Dashboard</a></p>
+            <p><a href="{{ url_for('marketplace.buyer_dashboard') }}" class="btn btn-secondary">Go to Buyer Dashboard</a></p> {# Seller also has buyer access #}
+            <p><a href="{{ url_for('marketplace.create_product') }}" class="btn btn-success">Create New Product</a></p>
+         {% elif easy_req_met %}
+             {# Meets Buyer reqs but not Seller #}
+            <p><a href="{{ url_for('marketplace.buyer_dashboard') }}" class="btn btn-primary">Go to Buyer Dashboard</a></p>
+            <p>Solve more Hard challenges to unlock Seller features.</p>
+         {% else %}
+             {# Enthusiast, no marketplace access yet #}
+             <p>Solve Easy challenges to unlock Buyer features and marketplace access.</p>
+         {% endif %}
+
+
+        {% if current_user.role == 'admin' %}
+            <h3>Admin Panel</h3>
+            <p><a href="{{ url_for('admin.dashboard') }}" class="btn btn-primary">Go to Admin Dashboard</a></p>
+        {% endif %}
+
+    </div>
+
+{% endblock %}

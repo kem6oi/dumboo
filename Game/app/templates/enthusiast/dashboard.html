@@ -1,0 +1,29 @@
+{# app/templates/enthusiast/dashboard.html #}
+{# Note: This template might not be used directly based on current route logic #}
+{# Enthusiasts are redirected to challenges.list #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Enthusiast Dashboard</h1>
+    <p>Welcome, {{ current_user.username }}! As an Enthusiast, your primary focus is solving challenges.</p>
+
+    <div class="profile-stats">
+        <h3>Your Challenge Progress</h3>
+        {# You might want to pass challenge counts to this template if used #}
+        {# For now, redirecting seems more direct based on the app flow #}
+        <p>Visit your <a href="{{ url_for('auth.profile') }}">Profile page</a> to see your challenge statistics.</p>
+    </div>
+
+    <p><a href="{{ url_for('challenges.list') }}" class="btn btn-primary">View Challenges</a></p>
+    <p><a href="{{ url_for('challenges.solved') }}" class="btn btn-secondary">View Your Solved Challenges</a></p>
+
+     {# Add links to upgrade if qualified, though this is handled on the profile page #}
+     {% if current_user.has_access_to_buyer_features() and current_user.role == 'enthusiast' %}
+         <p>You qualify to become a Buyer! Visit your <a href="{{ url_for('auth.profile') }}">Profile page</a> to upgrade.</p>
+     {% endif %}
+     {% if current_user.has_access_to_seller_features() and current_user.role in ['enthusiast', 'buyer'] %}
+          <p>You qualify to become a Seller! Visit your <a href="{{ url_for('auth.profile') }}">Profile page</a> to upgrade.</p>
+     {% endif %}
+
+
+{% endblock %}

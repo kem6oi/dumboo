@@ -1,0 +1,50 @@
+{# app/templates/admin/manage_users.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Manage Users</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Registered On</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users.items %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role | capitalize }}</td>
+                <td>{{ user.date_registered.strftime('%Y-%m-%d') }}</td>
+                 <td>{{ "Active" if user.is_active else "Inactive" }}</td>
+                <td>
+                    <a href="{{ url_for('admin.edit_user', user_id=user.id) }}" class="btn btn-primary">Edit Role</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+     <div class="pagination">
+        {% for page_num in users.iter_pages() %}
+            {% if page_num %}
+                {% if users.page == page_num %}
+                    <li class="active"><a href="{{ url_for('admin.manage_users', page=page_num) }}">{{ page_num }}</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('admin.manage_users', page=page_num) }}">{{ page_num }}</a></li>
+                {% endif %}
+            {% else %}
+                <li><span>...</span></li>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+{% endblock %}

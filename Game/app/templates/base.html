@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Genius CTF - Home</title>
+</head>
+
+<body class="index-page">
+    <!-- Mobile Toggle Button -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    
+    <!-- Main Sidebar -->
+    <aside class="app-sidebar">
+        <!-- Brand Header -->
+        <div class="sidebar-header">
+            <a href="/" class="sidebar-brand">
+                <span class="sidebar-brand-icon">⚡</span>
+                <div class="sidebar-brand-text">
+                    <h2>Genius CTF</h2>
+                    <p>Challenge Platform</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="sidebar-nav">
+            <!-- Main Navigation -->
+            <div class="sidebar-nav-section">
+                <div class="sidebar-nav-title">Main</div>
+                <ul class="sidebar-nav-list">
+                    <li class="sidebar-nav-item">
+                        <a href="/" class="sidebar-nav-link active">
+                            <span class="sidebar-nav-icon">🏠</span>
+                            Home
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/challenges/" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">🎯</span>
+                            Challenges
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/leaderboard" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">🏆</span>
+                            Leaderboard
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/access" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">🔓</span>
+                            Access Requirements
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Categories -->
+            <div class="sidebar-nav-section">
+                <div class="sidebar-nav-title">Categories</div>
+                <ul class="sidebar-nav-list">
+                    <li class="sidebar-nav-item">
+                        <a href="/challenges/?category=Cryptography" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">🔐</span>
+                            Cryptography
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/challenges/?category=Web" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">🌐</span>
+                            Web
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/challenges/?category=Reverse+Engineering" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">⚙️</span>
+                            Reverse Engineering
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/challenges/?category=Binary+Exploitation" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">💻</span>
+                            Binary Exploitation
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/challenges/?category=Forensics" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">🔍</span>
+                            Forensics
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Account (Guest) -->
+            <div class="sidebar-nav-section">
+                <div class="sidebar-nav-title">Account</div>
+                <ul class="sidebar-nav-list">
+                    <li class="sidebar-nav-item">
+                        <a href="/auth/login" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">🔑</span>
+                            Login
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/auth/register" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">📝</span>
+                            Register
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- CTA Section -->
+        <div class="sidebar-cta">
+            <h4>Ready to Start?</h4>
+            <p>Join thousands of security enthusiasts!</p>
+            <a href="/auth/register" class="btn btn-primary">Sign Up Free</a>
+        </div>
+
+        <!-- Footer -->
+        <div class="sidebar-footer">
+            <div class="sidebar-footer-links">
+                <a href="/about">About</a>
+                <a href="/help">Help</a>
+                <a href="/contact">Contact</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <div style="text-align: center; margin-bottom: 60px;">
+            <h1 class="gradient-text" style="font-size: 3rem; margin-bottom: 20px;">Welcome to Genius CTF</h1>
+            <p style="font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 30px;">
+                Test your cybersecurity skills with real-world challenges
+            </p>
+            <a href="/auth/register" class="btn btn-primary btn-lg">Get Started Now</a>
+            <a href="/challenges/" class="btn btn-secondary btn-lg" style="margin-left: 15px;">Browse Challenges</a>
+        </div>
+
+        <!-- Dashboard Swipe Cards -->
+        <div class="dashboard-cards-container">
+            <h2 style="text-align: center; margin-bottom: 30px;">Choose Your Path</h2>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 40px;">
+                Complete challenges to unlock exclusive marketplace features
+            </p>
+            
+            <div class="dashboard-cards-wrapper">
+                <!-- Buyer Card -->
+                <div class="dashboard-card buyer-card">
+                    <span class="unlock-badge">🔒 Locked</span>
+                    <div class="dashboard-card-icon">🛒</div>
+                    <h3>Buyer Dashboard</h3>
+                    <p>Get access to the marketplace by completing challenges and browse exclusive products.</p>
+                    
+                    <ul class="dashboard-card-features">
+                        <li>Browse marketplace products</li>
+                        <li>Purchase from verified sellers</li>
+                        <li>View transaction history</li>
+                        <li>Access buyer support</li>
+                    </ul>
+                    
+                    <div class="dashboard-card-action">
+                        <a href="/access" class="btn btn-primary">Unlock Requirements</a>
+                    </div>
+                </div>
+
+                <!-- Seller Card -->
+                <div class="dashboard-card seller-card">
+                    <span class="unlock-badge">🔒 Locked</span>
+                    <div class="dashboard-card-icon">💼</div>
+                    <h3>Seller Dashboard</h3>
+                    <p>Complete advanced challenges to become a verified seller and list your products.</p>
+                    
+                    <ul class="dashboard-card-features">
+                        <li>List unlimited products</li>
+                        <li>Manage your inventory</li>
+                        <li>Track sales analytics</li>
+                        <li>Verified seller badge</li>
+                    </ul>
+                    
+                    <div class="dashboard-card-action">
+                        <a href="/access" class="btn btn-success">Unlock Requirements</a>
+                    </div>
+                </div>
+
+                <!-- Enthusiast Card -->
+                <div class="dashboard-card" style="border-top: 6px solid #06b6d4;">
+                    <span class="unlock-badge unlocked">✓ Available</span>
+                    <div class="dashboard-card-icon" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">🎯</div>
+                    <h3>Challenge Zone</h3>
+                    <p>Solve challenges, improve your skills, and climb the leaderboard!</p>
+                    
+                    <ul class="dashboard-card-features">
+                        <li>Access all challenges</li>
+                        <li>Track your progress</li>
+                        <li>Compete on leaderboard</li>
+                        <li>Earn achievements</li>
+                    </ul>
+                    
+                    <div class="dashboard-card-action">
+                        <a href="/challenges/" class="btn btn-info">Start Challenges</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Swipe Indicator -->
+            <div class="swipe-indicator">Swipe to explore</div>
+            
+            <!-- Progress Dots -->
+            <div class="dashboard-cards-dots">
+                <div class="dashboard-cards-dot active"></div>
+                <div class="dashboard-cards-dot"></div>
+                <div class="dashboard-cards-dot"></div>
+            </div>
+        </div>
+
+        <!-- Platform Features -->
+        <h2 style="text-align: center; margin-top: 80px; margin-bottom: 40px;">Platform Features</h2>
+        
+        <div class="feature-cards-grid">
+            <div class="feature-card">
+                <div class="icon">🔐</div>
+                <h3>Security Challenges</h3>
+                <p>Practice with real-world security scenarios across multiple categories including cryptography, web, and binary exploitation.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">👥</div>
+                <h3>Active Community</h3>
+                <p>Connect with security enthusiasts, share knowledge, and collaborate on solving complex challenges.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🏪</div>
+                <h3>Secure Marketplace</h3>
+                <p>Trade with verified community members in a secure environment after proving your skills.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">📈</div>
+                <h3>Learn & Grow</h3>
+                <p>Track your progress, earn achievements, and climb the leaderboard as you master new skills.</p>
+            </div>
+        </div>
+
+        <!-- Challenge Categories -->
+        <h2 style="text-align: center; margin-top: 80px; margin-bottom: 40px;">Challenge Categories</h2>
+        <div class="category-cards-grid">
+            <div class="category-card">
+                <div class="icon">🔐</div>
+                <h3>Cryptography</h3>
+                <p>Master encryption and decryption techniques</p>
+                <a href="/challenges/?category=Cryptography" class="btn btn-secondary btn-sm">View Challenges</a>
+            </div>
+            <div class="category-card">
+                <div class="icon">🌐</div>
+                <h3>Web</h3>
+                <p>Exploit web vulnerabilities and security flaws</p>
+                <a href="/challenges/?category=Web" class="btn btn-secondary btn-sm">View Challenges</a>
+            </div>
+            <div class="category-card">
+                <div class="icon">⚙️</div>
+                <h3>Reverse Engineering</h3>
+                <p>Analyze and understand compiled programs</p>
+                <a href="/challenges/?category=Reverse+Engineering" class="btn btn-secondary btn-sm">View Challenges</a>
+            </div>
+            <div class="category-card">
+                <div class="icon">💻</div>
+                <h3>Binary Exploitation</h3>
+                <p>Find and exploit binary vulnerabilities</p>
+                <a href="/challenges/?category=Binary+Exploitation" class="btn btn-secondary btn-sm">View Challenges</a>
+            </div>
+            <div class="category-card">
+                <div class="icon">🔍</div>
+                <h3>Forensics</h3>
+                <p>Investigate and analyze digital evidence</p>
+                <a href="/challenges/?category=Forensics" class="btn btn-secondary btn-sm">View Challenges</a>
+            </div>
+            <div class="category-card">
+                <div class="icon">📦</div>
+                <h3>Miscellaneous</h3>
+                <p>Various unique security challenges</p>
+                <a href="/challenges/?category=Miscellaneous" class="btn btn-secondary btn-sm">View Challenges</a>
+            </div>
+            <div class="category-card">
+                <div class="icon">💾</div>
+                <h3>Programming</h3>
+                <p>Solve challenges through code</p>
+                <a href="/challenges/?category=Programming/Scripting" class="btn btn-secondary btn-sm">View Challenges</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <strong>Genius CTF</strong> © 2024 - All Rights Reserved
+            </div>
+            <div class="footer-links">
+                <a href="/about">About</a>
+                <a href="/terms">Terms</a>
+                <a href="/privacy">Privacy</a>
+                <a href="/contact">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Sidebar Toggle -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.app-sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        // Handle card scroll dots
+        const cardsWrapper = document.querySelector('.dashboard-cards-wrapper');
+        const dots = document.querySelectorAll('.dashboard-cards-dot');
+        
+        if (cardsWrapper && dots.length > 0) {
+            cardsWrapper.addEventListener('scroll', () => {
+                const scrollLeft = cardsWrapper.scrollLeft;
+                const cardWidth = cardsWrapper.querySelector('.dashboard-card').offsetWidth;
+                const gap = 24; // xl spacing
+                const currentIndex = Math.round(scrollLeft / (cardWidth + gap));
+                
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentIndex);
+                });
+            });
+
+            // Click dots to scroll
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    const cardWidth = cardsWrapper.querySelector('.dashboard-card').offsetWidth;
+                    const gap = 24;
+                    cardsWrapper.scrollTo({
+                        left: index * (cardWidth + gap),
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        }
+    </script>
+    
+    <script src="/static/js/script.js"></script>
+</body>
+</html>

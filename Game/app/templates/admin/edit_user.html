@@ -1,0 +1,22 @@
+{# app/templates/admin/edit_user.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Edit User: {{ user.username }}</h1>
+
+    <form method="POST" action="" class="form-validation">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.user_role.label }}
+            {{ form.user_role(class_='form-control' + (' is-invalid' if form.user_role.errors else '')) }}
+            {% for error in form.user_role.errors %}
+                <span class="invalid-feedback">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.submit() }}
+        </div>
+    </form>
+
+    <p><a href="{{ url_for('admin.manage_users') }}">Back to Manage Users</a></p>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Challenges</h1>
+
+    <div class="challenge-layout">
+        <div class="sidebar">
+            {# Filter by Difficulty #}
+            <h4>Filter Difficulty</h4>
+            <ul>
+                {# Pass all current filters in links #}
+                <li><a href="{{ url_for('challenges.list', difficulty='all', encryption_type=current_encryption_type, category=current_category) }}" {% if current_difficulty == 'all' %}class="current-filter"{% endif %}>All Difficulties ({{ counts.all }})</a></li>
+                <li><a href="{{ url_for('challenges.list', difficulty='easy', encryption_type=current_encryption_type, category=current_category) }}" {% if current_difficulty == 'easy' %}class="current-filter"{% endif %}>Easy ({{ counts.difficulty.easy }})</a></li>
+                <li><a href="{{ url_for('challenges.list', difficulty='medium', encryption_type=current_encryption_type, category=current_category) }}" {% if current_difficulty == 'medium' %}class="current-filter"{% endif %}>Medium ({{ counts.difficulty.medium }})</a></li>
+                <li><a href="{{ url_for('challenges.list', difficulty='hard', encryption_type=current_encryption_type, category=current_category) }}" {% if current_difficulty == 'hard' %}class="current-filter"{% endif %}>Hard ({{ counts.difficulty.hard }})</a></li>
+            </ul>
+
+            {# Filter by Encryption Type #}
+            {# Only show Encryption filter if category is Cryptography or All #}
+            {% if current_category == 'all' or current_category == 'Cryptography' %}
+                <h4 class="filter-heading">Filter Encryption</h4>
+                 <ul>
+                    {# Pass all current filters in links #}
+                    <li><a href="{{ url_for('challenges.list', difficulty=current_difficulty, encryption_type='all', category=current_category) }}" {% if current_encryption_type == 'all' %}class="current-filter"{% endif %}>All Types ({{ counts.all }})</a></li>
+                    {# Assuming counts.encryption_type includes all types present #}
+                    {% for enc_type, count in counts.encryption_type.items() %}
+                        {# Only link if count > 0 or it's the current filter #}
+                        {% if count > 0 or current_encryption_type == enc_type %}
+                            <li><a href="{{ url_for('challenges.list', difficulty=current_difficulty, encryption_type=enc_type, category=current_category) }}" {% if current_encryption_type == enc_type %}class="current-filter"{% endif %}>{{ enc_type | upper }} ({{ count }})</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+
+            {# Filter by Category #}
+            <h4 class="filter-heading">Filter Category</h4>
+            <ul>
+                 {# Pass all current filters in links #}
+                <li><a href="{{ url_for('challenges.list', difficulty=current_difficulty, encryption_type=current_encryption_type, category='all') }}" {% if current_category == 'all' %}class="current-filter"{% endif %}>All Categories ({{ counts.all }})</a></li>
+                {% for cat in all_categories %} {# Loop through all categories from config #}
+                     {# Only link if count > 0 or it's the current filter #}
+                     {% if counts.category.get(cat, 0) > 0 or current_category == cat %}
+                         <li><a href="{{ url_for('challenges.list', difficulty=current_difficulty, encryption_type=current_encryption_type, category=cat) }}" {% if current_category == cat %}class="current-filter"{% endif %}>{{ cat }} ({{ counts.category.get(cat, 0) }})</a></li> {# Use .get(cat, 0) for safety #}
+                     {% endif %}
+                {% endfor %}
+            </ul>
+
+
+             {# User Progress #}
+             <h4 class="filter-heading">Your Progress</h4>
+             <ul>
+                 <li><a href="{{ url_for('challenges.solved') }}">Challenges Solved ({{ counts.solved_by_user }})</a></li>
+             </ul>
+             <p><a href="{{ url_for('challenges.leaderboard') }}">View Leaderboard</a></p>
+
+        </div>
+
+        <div class="main-content">
+            {# Display Challenges #}
+            {% if challenges.items %}
+                {% for challenge in challenges.items %}
+                    <div class="challenge-list-item">
+                        <div>
+                            <h4>{{ challenge.title }}</h4>
+                            <div class="challenge-meta">
+                                Category: {{ challenge.category }} | {# Display Category #}
+                                Difficulty: {{ challenge.difficulty | capitalize }}
+                                {# Display Encryption Type only if it exists #}
+                                {% if challenge.encryption_type %}
+                                    | Encryption: {{ challenge.encryption_type | upper }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="challenge-actions">
+                            <span class="challenge-status {% if challenge.id in solved_ids %}solved{% else %}unsolved{% endif %}">
+                                {% if challenge.id in solved_ids %}Solved{% else %}Unsolved{% endif %}
+                            </span>
+                            <a href="{{ url_for('challenges.details', challenge_id=challenge.id) }}" class="btn btn-primary btn-sm">View Details</a> {# Added btn-sm for size #}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No challenges found matching the selected filters.</p>
+            {% endif %}
+
+
+            {# Pagination #}
+            <div class="pagination">
+                 {# Pass all current filters in pagination links #}
+                 {% for page_num in challenges.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                    {% if page_num %}
+                        {% if challenges.page == page_num %}
+                            <li class="active"><a href="{{ url_for('challenges.list', difficulty=current_difficulty, encryption_type=current_encryption_type, category=current_category, page=page_num) }}">{{ page_num }}</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('challenges.list', difficulty=current_difficulty, encryption_type=current_encryption_type, category=current_category, page=page_num) }}">{{ page_num }}</a></li>
+                        {% endif %}
+                    {% else %}
+                        <li><span>...</span></li>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{# app/templates/marketplace/cart.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Shopping Cart</h1>
+
+    {% if cart_items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                    <tr>
+                        <td>
+                            {% if item.product %}
+                                <a href="{{ url_for('marketplace.product_detail', product_id=item.product.id) }}">
+                                     {# Display thumbnail image if available #}
+                                     {% if item.product.image_file %}
+                                         <img src="{{ url_for('static', filename='uploads/' + item.product.image_file) }}" alt="{{ item.product.name }}" style="width: 50px; height: auto; margin-right: 10px; vertical-align: middle;">
+                                     {% endif %}
+                                     {{ item.product.name }}
+                                </a>
+                            {% else %}
+                                <em>Product not found</em> {# Handle case where product was deleted #}
+                            {% endif %}
+                        </td>
+                        <td>
+                             {% if item.product %}
+                                 ${{ "%.2f" | format(item.product.price) }}
+                             {% else %}
+                                 N/A
+                             {% endif %}
+                        </td>
+                        <td>
+                            {# Simple form for quantity update #}
+                            <form method="POST" action="{{ url_for('marketplace.update_cart_item', item_id=item.id) }}" style="display: inline-block;">
+                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" style="width: 60px; padding: 5px;">
+                                <button type="submit" class="btn btn-secondary btn-sm">Update</button>
+                            </form>
+                        </td>
+                        <td>
+                             {% if item.product %}
+                                 ${{ "%.2f" | format(item.product.price * item.quantity) }}
+                             {% else %}
+                                 N/A
+                             {% endif %}
+                        </td>
+                        <td>
+                            {# Simple form for removal #}
+                            <form method="POST" action="{{ url_for('marketplace.remove_from_cart', item_id=item.id) }}" style="display: inline-block;">
+                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3 style="text-align: right; margin-top: 20px;">Cart Subtotal: ${{ "%.2f" | format(subtotal) }}</h3>
+
+        {% if can_checkout %}
+            <div style="text-align: right; margin-top: 20px;">
+                {# Link to checkout page #}
+                <a href="{{ url_for('marketplace.checkout') }}" class="btn btn-success btn-lg">Proceed to Checkout »</a>
+            </div>
+        {% else %}
+             <div class="alert alert-warning" style="text-align: right; margin-top: 20px;">
+                 Solve {{ config.EASY_CHALLENGES_REQUIRED_FOR_BUYER }} easy challenges to unlock checkout.
+             </div>
+        {% endif %}
+
+
+    {% else %}
+        <p>Your cart is empty. Visit the <a href="{{ url_for('marketplace.product_list') }}">Marketplace</a> to add items.</p>
+    {% endif %}
+
+{% endblock %}

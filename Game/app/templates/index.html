@@ -1,0 +1,308 @@
+{# app/templates/index.html #}
+{% extends "base.html" %}
+
+{# Add a class to the body for this page #}
+{% block body_class %}class="index-page"{% endblock body_class %}
+
+{% block content %}
+    {# Hero Section #}
+    <div style="text-align: center; margin-bottom: 60px;">
+        <h1 class="gradient-text" style="font-size: 3rem; margin-bottom: 20px;">Welcome to Genius CTF</h1>
+        <p style="font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 30px;">
+            Test your cybersecurity skills with real-world challenges
+        </p>
+        {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Get Started Now</a>
+            <a href="{{ url_for('challenges.list') }}" class="btn btn-secondary btn-lg" style="margin-left: 15px;">Browse Challenges</a>
+        {% elif current_user.role != 'admin' %}
+            <a href="{{ url_for('challenges.list') }}" class="btn btn-primary btn-lg">Start Challenges</a>
+            <a href="{{ url_for('auth.profile') }}" class="btn btn-secondary btn-lg" style="margin-left: 15px;">View Profile</a>
+        {% else %}
+            <p style="font-size: 1.125rem; color: var(--text-primary); margin-top: 20px;">
+                Welcome back, Admin! 👑
+            </p>
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-danger btn-lg" style="margin-top: 15px;">Admin Dashboard</a>
+        {% endif %}
+    </div>
+
+    {# Dashboard Swipe Cards #}
+    <div class="dashboard-cards-container">
+        <h2 style="text-align: center; margin-bottom: 30px;">Choose Your Path</h2>
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 40px;">
+            Complete challenges to unlock exclusive marketplace features
+        </p>
+        
+        <div class="dashboard-cards-wrapper">
+            {# Buyer Card #}
+            <div class="dashboard-card buyer-card">
+                {% if current_user.is_authenticated and current_user.has_access_to_buyer_features() %}
+                    <span class="unlock-badge unlocked">✓ Unlocked</span>
+                {% else %}
+                    <span class="unlock-badge">🔒 Locked</span>
+                {% endif %}
+                
+                <div class="dashboard-card-icon">🛒</div>
+                <h3>Buyer Dashboard</h3>
+                <p>Complete <strong>{{ config.EASY_CHALLENGES_REQUIRED_FOR_BUYER }} easy challenges</strong> to access the marketplace and browse exclusive products.</p>
+                
+                <ul class="dashboard-card-features">
+                    <li>Browse marketplace products</li>
+                    <li>Purchase from verified sellers</li>
+                    <li>View transaction history</li>
+                    <li>Access buyer support</li>
+                </ul>
+                
+                <div class="dashboard-card-action">
+                    {% if current_user.is_authenticated and current_user.has_access_to_buyer_features() %}
+                        <a href="{{ url_for('marketplace.product_list') }}" class="btn btn-primary">Go to Marketplace</a>
+                    {% else %}
+                        <a href="{{ url_for('access') }}" class="btn btn-primary">Unlock Requirements</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {# Seller Card #}
+            <div class="dashboard-card seller-card">
+                {% if current_user.is_authenticated and current_user.can_list_products() %}
+                    <span class="unlock-badge unlocked">✓ Unlocked</span>
+                {% else %}
+                    <span class="unlock-badge">🔒 Locked</span>
+                {% endif %}
+                
+                <div class="dashboard-card-icon">💼</div>
+                <h3>Seller Dashboard</h3>
+                <p>Complete <strong>{{ config.HARD_CHALLENGES_REQUIRED_FOR_SELLER }} hard challenges</strong> to become a verified seller and list your products.</p>
+                
+                <ul class="dashboard-card-features">
+                    <li>List unlimited products</li>
+                    <li>Manage your inventory</li>
+                    <li>Track sales analytics</li>
+                    <li>Verified seller badge</li>
+                </ul>
+                
+                <div class="dashboard-card-action">
+                    {% if current_user.is_authenticated and current_user.can_list_products() %}
+                        <a href="{{ url_for('marketplace.my_products') }}" class="btn btn-success">Manage Products</a>
+                    {% else %}
+                        <a href="{{ url_for('access') }}" class="btn btn-success">Unlock Requirements</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {# Enthusiast Card #}
+            <div class="dashboard-card" style="border-top: 6px solid #06b6d4;">
+                <span class="unlock-badge unlocked">✓ Available</span>
+                
+                <div class="dashboard-card-icon" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">🎯</div>
+                <h3>Challenge Zone</h3>
+                <p>Solve challenges, improve your skills, and climb the leaderboard!</p>
+                
+                <ul class="dashboard-card-features">
+                    <li>Access all challenges</li>
+                    <li>Track your progress</li>
+                    <li>Compete on leaderboard</li>
+                    <li>Earn achievements</li>
+                </ul>
+                
+                <div class="dashboard-card-action">
+                    <a href="{{ url_for('challenges.list') }}" class="btn btn-info">Start Challenges</a>
+                </div>
+            </div>
+
+            {# Admin Card #}
+            <div class="dashboard-card" style="border-top: 6px solid #ef4444;">
+                {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                    <span class="unlock-badge unlocked">✓ Admin</span>
+                {% else %}
+                    <span class="unlock-badge" style="background: linear-gradient(135deg, #64748b 0%, #475569 100%);">🔐 Restricted</span>
+                {% endif %}
+                
+                <div class="dashboard-card-icon" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">⚙️</div>
+                <h3>Administrator</h3>
+                <p>Manage users, challenges, and maintain platform security.</p>
+                
+                <ul class="dashboard-card-features">
+                    <li>User management</li>
+                    <li>Challenge creation & editing</li>
+                    <li>Platform analytics</li>
+                    <li>Security monitoring</li>
+                </ul>
+                
+                <div class="dashboard-card-action">
+                    {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-danger">Admin Dashboard</a>
+                    {% else %}
+                        <p style="margin: 0; color: var(--text-muted); font-size: 0.875rem; font-weight: 600;">
+                            <small>⚠️ Requires Admin account</small>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# Swipe Indicator #}
+        <div class="swipe-indicator">Swipe to explore</div>
+        
+        {# Progress Dots #}
+        <div class="dashboard-cards-dots">
+            <div class="dashboard-cards-dot active"></div>
+            <div class="dashboard-cards-dot"></div>
+            <div class="dashboard-cards-dot"></div>
+            <div class="dashboard-cards-dot"></div>
+        </div>
+    </div>
+
+    {# Platform Features #}
+    <h2 style="text-align: center; margin-top: 80px; margin-bottom: 40px;">Platform Features</h2>
+    
+    <div class="feature-cards-grid">
+        <div class="feature-card">
+            <div class="icon">🔐</div>
+            <h3>Security Challenges</h3>
+            <p>Practice with real-world security scenarios across multiple categories including cryptography, web, and binary exploitation.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">👥</div>
+            <h3>Active Community</h3>
+            <p>Connect with security enthusiasts, share knowledge, and collaborate on solving complex challenges.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">🏪</div>
+            <h3>Secure Marketplace</h3>
+            <p>Trade with verified community members in a secure environment after proving your skills.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">📈</div>
+            <h3>Learn & Grow</h3>
+            <p>Track your progress, earn achievements, and climb the leaderboard as you master new skills.</p>
+        </div>
+    </div>
+
+    {# Challenge Categories #}
+    {% set all_categories = config.CHALLENGE_CATEGORIES %}
+    {% if all_categories %}
+        <h2 style="text-align: center; margin-top: 80px; margin-bottom: 40px;">Challenge Categories</h2>
+        <div class="category-cards-grid">
+            {% for category in all_categories %}
+                <div class="category-card">
+                    {# Category Icons #}
+                    {% if category == 'Cryptography' %}
+                        <div class="icon">🔐</div>
+                    {% elif category == 'Web' %}
+                        <div class="icon">🌐</div>
+                    {% elif category == 'Reverse Engineering' %}
+                        <div class="icon">⚙️</div>
+                    {% elif category == 'Binary Exploitation' %}
+                        <div class="icon">💻</div>
+                    {% elif category == 'Forensics' or category == 'Digital Forensics' %}
+                        <div class="icon">🔍</div>
+                    {% elif category == 'Miscellaneous' %}
+                        <div class="icon">📦</div>
+                    {% elif category == 'Programming/Scripting' or category == 'Programming' %}
+                        <div class="icon">💾</div>
+                    {% else %}
+                        <div class="icon">🎯</div>
+                    {% endif %}
+                    
+                    <h3>{{ category }}</h3>
+                    
+                    {# Category Descriptions #}
+                    {% if category == 'Cryptography' %}
+                        <p>Master encryption and decryption techniques</p>
+                    {% elif category == 'Web' %}
+                        <p>Exploit web vulnerabilities and security flaws</p>
+                    {% elif category == 'Reverse Engineering' %}
+                        <p>Analyze and understand compiled programs</p>
+                    {% elif category == 'Binary Exploitation' %}
+                        <p>Find and exploit binary vulnerabilities</p>
+                    {% elif category == 'Forensics' or category == 'Digital Forensics' %}
+                        <p>Investigate and analyze digital evidence</p>
+                    {% elif category == 'Miscellaneous' %}
+                        <p>Various unique security challenges</p>
+                    {% elif category == 'Programming/Scripting' or category == 'Programming' %}
+                        <p>Solve challenges through code</p>
+                    {% else %}
+                        <p>Test your skills in {{ category }}</p>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('challenges.list', category=category) }}" class="btn btn-secondary btn-sm">View Challenges</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {# Stats Section (if authenticated) #}
+    {% if current_user.is_authenticated %}
+    <div style="margin-top: 80px;">
+        <h2 style="text-align: center; margin-bottom: 40px;">Your Progress</h2>
+        <div class="dashboard-stats">
+            <div class="stat-box">
+                <h4>Challenges Solved</h4>
+                <p>{{ current_user.challenges_solved.count() }}</p>
+            </div>
+            <div class="stat-box">
+                <h4>Easy Completed</h4>
+                <p>{{ current_user.get_solved_easy_count() }}</p>
+            </div>
+            <div class="stat-box">
+                <h4>Hard Completed</h4>
+                <p>{{ current_user.get_solved_hard_count() }}</p>
+            </div>
+            <div class="stat-box">
+                <h4>Marketplace Access</h4>
+                <p style="font-size: 1.5rem;">
+                    {% if current_user.has_access_to_buyer_features() %}
+                        ✓
+                    {% else %}
+                        🔒
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {# Call to Action for Guests #}
+    {% if not current_user.is_authenticated %}
+    <div style="text-align: center; margin-top: 80px; padding: 60px 20px; background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%); border-radius: var(--radius-xl); border: 2px solid var(--border-color);">
+        <h2 style="margin-bottom: 20px;">Ready to Get Started?</h2>
+        <p style="font-size: 1.125rem; color: var(--text-secondary); margin-bottom: 30px;">
+            Join thousands of security enthusiasts and start your journey today!
+        </p>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Create Free Account</a>
+        <a href="{{ url_for('challenges.list') }}" class="btn btn-secondary btn-lg" style="margin-left: 15px;">Browse Challenges</a>
+    </div>
+    {% endif %}
+
+    {# JavaScript for Card Navigation #}
+    <script>
+        // Handle card scroll dots
+        const cardsWrapper = document.querySelector('.dashboard-cards-wrapper');
+        const dots = document.querySelectorAll('.dashboard-cards-dot');
+        
+        if (cardsWrapper && dots.length > 0) {
+            cardsWrapper.addEventListener('scroll', () => {
+                const scrollLeft = cardsWrapper.scrollLeft;
+                const cardWidth = cardsWrapper.querySelector('.dashboard-card').offsetWidth;
+                const gap = 24; // xl spacing
+                const currentIndex = Math.round(scrollLeft / (cardWidth + gap));
+                
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentIndex);
+                });
+            });
+
+            // Click dots to scroll
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    const cardWidth = cardsWrapper.querySelector('.dashboard-card').offsetWidth;
+                    const gap = 24;
+                    cardsWrapper.scrollTo({
+                        left: index * (cardWidth + gap),
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        }
+    </script>
+{% endblock %}

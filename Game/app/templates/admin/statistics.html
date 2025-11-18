@@ -1,0 +1,86 @@
+{# app/templates/admin/statistics.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Platform Statistics</h1>
+
+    <h2>User Statistics</h2>
+    <div class="dashboard-stats">
+         <div class="stat-box">
+            <h4>Total Users</h4>
+            <p>{{ user_stats.total }}</p>
+        </div>
+         <div class="stat-box">
+            <h4>Admins</h4>
+            <p>{{ user_stats.admins }}</p>
+        </div>
+         <div class="stat-box">
+            <h4>Sellers</h4>
+            <p>{{ user_stats.sellers }}</p>
+        </div>
+         <div class="stat-box">
+            <h4>Buyers</h4>
+            <p>{{ user_stats.buyers }}</p>
+        </div>
+         <div class="stat-box">
+            <h4>Enthusiasts</h4>
+            <p>{{ user_stats.enthusiasts }}</p>
+        </div>
+    </div>
+
+    <h2>Challenge Statistics</h2>
+     <div class="dashboard-stats">
+         <div class="stat-box">
+            <h4>Total Challenges</h4>
+            <p>{{ challenge_stats.total }}</p>
+        </div>
+         <div class="stat-box">
+            <h4>Easy Challenges</h4>
+            <p>{{ challenge_stats.easy }}</p>
+        </div>
+         <div class="stat-box">
+            <h4>Medium Challenges</h4>
+            <p>{{ challenge_stats.medium }}</p>
+        </div>
+         <div class="stat-box">
+            <h4>Hard Challenges</h4>
+            <p>{{ challenge_stats.hard }}</p>
+        </div>
+    </div>
+     <div class="dashboard-stats">
+         <div class="stat-box">
+            <h4>AES Challenges</h4>
+            <p>{{ challenge_stats.aes }}</p>
+        </div>
+         <div class="stat-box">
+            <h4>Vigenère Challenges</h4>
+            <p>{{ challenge_stats.vigenere }}</p>
+        </div>
+         <div class="stat-box">
+            <h4>RSA Challenges</h4>
+            <p>{{ challenge_stats.rsa }}</p>
+        </div>
+    </div>
+
+    <h2>Marketplace Statistics</h2>
+     <div class="dashboard-stats">
+         <div class="stat-box">
+            <h4>Total Products</h4>
+            <p>{{ marketplace_stats.products }}</p>
+        </div>
+         <div class="stat-box">
+            <h4>Active Products</h4>
+            <p>{{ marketplace_stats.active_products }}</p>
+        </div>
+         <div class="stat-box">
+            <h4>Total Purchases</h4>
+            <p>{{ marketplace_stats.purchases }}</p>
+        </div>
+         <div class="stat-box">
+            <h4>Completed Purchases</h4>
+            <p>{{ marketplace_stats.completed_purchases }}</p>
+        </div>
+    </div>
+
+
+{% endblock %}

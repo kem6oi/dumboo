@@ -1,0 +1,49 @@
+{# app/templates/challenges/solved.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Your Solved Challenges</h1>
+
+    {% if solved_challenges.items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Challenge Title</th>
+                    <th>Difficulty</th>
+                    <th>Encryption</th>
+                    <th>Solved On</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for challenge, solved_entry in solved_challenges.items %}
+                    <tr>
+                        <td>{{ challenge.title }}</td>
+                        <td>{{ challenge.difficulty | capitalize }}</td>
+                        <td>{{ challenge.encryption_type | upper }}</td>
+                        <td>{{ solved_entry.solution_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td><a href="{{ url_for('challenges.details', challenge_id=challenge.id) }}" class="btn btn-primary btn-sm">View Details</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+         <div class="pagination">
+            {% for page_num in solved_challenges.iter_pages() %}
+                {% if page_num %}
+                    {% if solved_challenges.page == page_num %}
+                        <li class="active"><a href="{{ url_for('challenges.solved', page=page_num) }}">{{ page_num }}</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('challenges.solved', page=page_num) }}">{{ page_num }}</a></li>
+                    {% endif %}
+                {% else %}
+                    <li><span>...</span></li>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <p>You haven't solved any challenges yet. Visit the <a href="{{ url_for('challenges.list') }}">challenges page</a> to get started!</p>
+    {% endif %}
+
+{% endblock %}

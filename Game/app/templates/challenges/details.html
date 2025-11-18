@@ -1,0 +1,68 @@
+{# app/templates/challenges/details.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{ challenge.title }} <small>({{ challenge.difficulty | capitalize }})</small></h1>
+
+    <div class="challenge-details">
+        <p><strong>Category:</strong> {{ challenge.category }}</p>{# Display Category #}
+        <p><strong>Difficulty:</strong> {{ challenge.difficulty | capitalize }}</p>
+         {# Display Encryption Type only if it exists #}
+        {% if challenge.encryption_type %}
+             <p><strong>Encryption Type:</strong> {{ challenge.encryption_type | upper }}</p>
+        {% endif %}
+        <p><strong>Description:</strong> {{ challenge.description | replace('\n', '<br>') | safe }}</p>
+
+
+        {# Display Challenge Data and Config JSON if present #}
+        {% if challenge.challenge_data or challenge.config_json %}
+             <h3>Challenge Data / Instructions</h3>
+             <div class="challenge-data">
+                 {% if challenge.challenge_data %}
+                     <p><strong>Challenge Data:</strong></p>
+                     <pre>{{ challenge.challenge_data }}</pre>
+                 {% endif %}
+
+                 {% if challenge.config_json %}
+                     <p><strong>Configuration Details:</strong></p>
+                     <pre>{{ challenge.config_json }}</pre>
+                      <small>These might be keys, IVs, connection details, or other type-specific config.</small>
+                 {% endif %}
+             </div>
+        {% else %}
+             {# If no specific data/config, the description must contain all necessary info #}
+        {% endif %}
+
+
+    </div>
+
+    {% if already_solved %}
+        <div class="alert alert-success">You have already solved this challenge!</div>
+         <h3>Your Solution</h3>
+         {# Display the flag - only after solving #}
+         {# Corrected flag format syntax #}
+         <p>Your flag for this challenge was: <code>Flag{{ challenge.id }}_{{ challenge.flag }}</code></p>
+        <p><a href="{{ url_for('challenges.list') }}" class="btn btn-secondary">Back to Challenges</a></p>
+    {% else %}
+        <div class="challenge-solve-form">
+            <h3>Submit Your Solution</h3>
+            {# Note: Instructions still assume flag format. Update if other submission types are added later. #}
+            <p>Your solution should be the original plaintext/answer wrapped in the flag format: <code>Flag{challenge_id_answer}</code>. For example, if the challenge ID is 5 and the answer is "HelloWorld", the flag is <code>Flag{5_HelloWorld}</code>.</p>
+             <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.solution.label }}
+                    {{ form.solution(class_='form-control') }} {# Add class for styling #}
+                    {% for error in form.solution.errors %}
+                        <span class="invalid-feedback" style="display: block;">{{ error }}</span> {# Use class for styling #}
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class_='btn btn-primary') }} {# Add class for styling #}
+                </div>
+            </form>
+        </div>
+         <p><a href="{{ url_for('challenges.list') }}" class="btn btn-secondary">Back to Challenges</a></p>
+    {% endif %}
+
+{% endblock %}

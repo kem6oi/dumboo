@@ -1,0 +1,66 @@
+{# app/templates/marketplace/checkout.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Checkout</h1>
+
+    {% if cart_items %}
+        <h2>Order Summary</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                     {% if item.product %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ "%.2f" | format(item.product.price) }}</td>
+                            <td>${{ "%.2f" | format(item.product.price * item.quantity) }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3 style="text-align: right; margin-top: 20px;">Order Total: ${{ "%.2f" | format(subtotal) }}</h3>
+
+        <h2>Payment Method</h2>
+        <p>Selected Method: M-Pesa (Simulated)</p>
+
+        {# Add a form here if you need user input like phone number for M-Pesa #}
+        {# Example using the CheckoutForm if it has a phone_number field #}
+        {% if form %}
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                {# Example phone number field #}
+                {# <div class="form-group">
+                    {{ form.phone_number.label }}
+                    {{ form.phone_number(class_='form-control' + (' is-invalid' if form.phone_number.errors else '')) }}
+                    {% for error in form.phone_number.errors %}
+                        <span class="invalid-feedback">{{ error }}</span>
+                    {% endfor %}
+                </div> #}
+                <div class="form-group">
+                    {{ form.submit(class_='btn btn-success btn-lg') }}
+                </div>
+            </form>
+        {% else %}
+             {# If no form fields needed, just a button #}
+             <form method="POST" action="">
+                 <button type="submit" class="btn btn-success btn-lg">Initiate M-Pesa STK Push (Simulated)</button>
+             </form>
+        {% endif %}
+
+
+    {% else %}
+        <p>Your cart is empty. <a href="{{ url_for('marketplace.product_list') }}">Return to Marketplace.</a></p>
+    {% endif %}
+
+{% endblock %}

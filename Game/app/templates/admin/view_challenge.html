@@ -1,0 +1,80 @@
+{# app/templates/admin/view_challenge.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{ challenge.title }} <small>({{ challenge.difficulty | capitalize }})</small></h1>
+
+    <div class="challenge-details">
+        <p><strong>ID:</strong> {{ challenge.id }}</p>{# Display Challenge ID #}
+        <p><strong>Category:</strong> {{ challenge.category }}</p>
+        <p><strong>Difficulty:</strong> {{ challenge.difficulty | capitalize }}</p>
+         {# Display Encryption Type only if it exists #}
+        {% if challenge.encryption_type %}
+             <p><strong>Encryption Type:</strong> {{ challenge.encryption_type | upper }}</p>
+        {% endif %}
+        <p><strong>Description:</strong> {{ challenge.description | replace('\n', '<br>') | safe }}</p>
+
+        {# Display Challenge Data and Config JSON if present #}
+        {% if challenge.challenge_data or challenge.config_json %}
+             <h3>Challenge Data / Configuration (Admin View)</h3>
+             <div class="challenge-data">
+                 {% if challenge.challenge_data %}
+                     <p><strong>Challenge Data:</strong></p>
+                     <pre>{{ challenge.challenge_data }}</pre>
+                 {% endif %}
+
+                 {% if challenge.config_json %}
+                     <p><strong>Configuration Details (JSON):</strong></p>
+                     <pre>{{ challenge.config_json }}</pre>
+                      <small>These might be keys, IVs, connection details, or other type-specific config.</small>
+                 {% endif %}
+             </div>
+        {% else %}
+             {# If no specific data/config, indicate it #}
+              <p>No specific challenge data or configuration provided for this challenge instance.</p>
+        {% endif %}
+
+
+        {# Display the flag and expected flag format - always visible to admin #}
+        <h3>Solution (Flag)</h3>
+        <div class="challenge-data"> {# Reuse class for styling #}
+             <p><strong>Flag (Solution String):</strong></p>
+             <pre>{{ challenge.flag }}</pre>
+
+             <p><strong>Expected Flag Format:</strong></p>
+             <pre>Flag{{ challenge.id }}_{{ challenge.flag }}</pre>
+        </div>
+
+
+        {% if solvers %}
+            <h3>Users Who Solved This Challenge ({{ solvers | length }})</h3>{# Add count to heading #}
+            <ul>
+                {% for user in solvers %}
+                    <li>
+                        <a href="{{ url_for('admin.edit_user', user_id=user.id) }}">{{ user.username }}</a>
+                        {# Use loop.index for the rank #}
+                        {% set specific_solved_challenge = user.solved_challenges | selectattr('challenge_id', '==', challenge.id) | first %}
+                        solved on {{ specific_solved_challenge.solution_time.strftime('%Y-%m-%d %H:%M') }}
+                     </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No users have solved this challenge yet.</p>
+        {% endif %}
+    </div>
+
+    {# Action buttons #}
+    <p>
+        <a href="{{ url_for('admin.manage_challenges') }}" class="btn btn-secondary">Back to Manage Challenges</a>
+         {# Add Edit button #}
+        <a href="{{ url_for('admin.edit_challenge', challenge_id=challenge.id) }}" class="btn btn-primary">Edit Challenge</a>
+        {% if solvers | length == 0 %}
+            <a href="{{ url_for('admin.delete_challenge', challenge_id=challenge.id) }}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this challenge? This cannot be undone.');">Delete Challenge</a>
+        {% else %}
+            <button class="btn btn-danger" disabled title="Cannot delete challenge that has been solved">Delete Challenge</button>
+        {% endif %}
+    </p>
+
+    {# Remove the old unused script #}
+
+{% endblock %}

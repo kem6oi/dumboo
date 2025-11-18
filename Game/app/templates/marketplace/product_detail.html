@@ -1,0 +1,46 @@
+{# app/templates/marketplace/product_detail.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="product-detail">
+        <div class="product-image">
+            <img src="{{ url_for('static', filename='uploads/' + product.image_file) }}" alt="{{ product.name }}"> {# Corrected path #}
+        </div>
+        <div class="product-info">
+            <h2>{{ product.name }}</h2>
+            <p class="price">${{ "%.2f" | format(product.price) }}</p>
+             <p><strong>Sold by:</strong> {{ product.seller.username }}</p>
+            <p><strong>Posted On:</strong> {{ product.date_posted.strftime('%Y-%m-%d') }}</p>
+            <p><strong>Availability:</strong> {{ "Available" if product.available else "Unavailable" }}</p>
+            <p><strong>Description:</strong> {{ product.description | replace('\n', '<br>') | safe }}</p>
+
+            {# Add To Cart form #}
+            {% if product.available and current_user.id != product.seller_id %}
+                 <h3>Add to Cart</h3>
+                 {# Use the new AddToCartForm #}
+                 <form method="POST" action=""> {# Action posts back to this route #}
+                     {{ add_to_cart_form.hidden_tag() }}
+                     <div class="form-group" style="width: 150px;"> {# Limit width for quantity field #}
+                         {{ add_to_cart_form.quantity.label }}
+                         {{ add_to_cart_form.quantity(class_='form-control' + (' is-invalid' if add_to_cart_form.quantity.errors else '')) }}
+                         {% for error in add_to_cart_form.quantity.errors %}
+                             <span class="invalid-feedback">{{ error }}</span>
+                         {% endfor %}
+                     </div>
+                     <div class="form-group">
+                         {{ add_to_cart_form.submit(class_='btn btn-primary') }} {# Add class #}
+                     </div>
+                 </form>
+            {% elif not product.available %}
+                <div class="alert alert-warning">This product is currently unavailable.</div>
+            {% elif current_user.id == product.seller_id %}
+                 <div class="alert alert-info">This is your product. You cannot purchase your own listing.</div>
+                 <p><a href="{{ url_for('marketplace.seller_dashboard') }}" class="btn btn-secondary">Back to Seller Dashboard</a></p>
+            {% endif %}
+
+        </div>
+    </div>
+
+     <p><a href="{{ url_for('marketplace.product_list') }}" class="btn btn-secondary">Back to Product List</a></p>
+
+{% endblock %}

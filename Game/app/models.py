@@ -9,7 +9,11 @@ from flask import current_app as app # Import current_app to access config withi
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    try:
+        return User.query.get(int(user_id))
+    except (ValueError, TypeError):
+        # Handle invalid user_id from corrupted session data
+        return None
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
